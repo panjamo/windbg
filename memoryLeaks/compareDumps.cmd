@@ -39,6 +39,7 @@ del *Adresses.txt
 
 wc -l cdbInput.txt  | awk "{ lines=int($1/4) + 1 ; print lines }" | xargs -I$ split -l "$" cdbInput.txt split_
 
+for %%x in (split*) do echo .logclose >> "%%x"
 for %%x in (split*) do echo q >> "%%x"
 for %%x in (split*) do start /min /low cdb.exe -z %2 -c "$<%%x"
 
