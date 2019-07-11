@@ -11,7 +11,7 @@ Get-Content $args[0] | ForEach-Object {
         $busy0 += $asDecimal
         $busy0count ++
         if ($asDecimal -gt 10000) {
-            Write-Host busy $asDecimal
+            # Write-Host busy $asDecimal
         }
     }
     elseif ($_ -match '([^ ]+) - \(free\)') {
@@ -19,7 +19,7 @@ Get-Content $args[0] | ForEach-Object {
         $free0 += $asDecimal
         $free0count ++;
         if ($asDecimal -gt 10000) {
-            Write-Host free $asDecimal
+            # Write-Host free $asDecimal
         }
     }
 }
@@ -34,7 +34,7 @@ Get-Content $args[1] | ForEach-Object {
         $busy1 += $asDecimal
         $busy1count ++
         if ($asDecimal -gt 10000) {
-            Write-Host busy $asDecimal
+            # Write-Host busy $asDecimal
         }
     }
     elseif ($_ -match '([^ ]+) - \(free\)') {
@@ -42,7 +42,7 @@ Get-Content $args[1] | ForEach-Object {
         $free1 += $asDecimal
         $free1count ++;
         if ($asDecimal -gt 10000) {
-            Write-Host free $asDecimal
+            # Write-Host free $asDecimal
         }
     }
 }
