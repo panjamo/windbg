@@ -19,7 +19,7 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
         REM move "%%H" "%%G-%%~zH"
 
         REM CHECKSUM
-        FOR /F "tokens=*" %%C IN ('tail -n +6 %%H ^| grep -o -P "^ {8}[0-9a-f]+" ^| cksum ^| awk "{ print $1 }"') DO (
+        FOR /F "tokens=*" %%C IN ('tail -n +6 %%H ^| head -n -6 ^| cksum ^| awk "{ print $1 }"') DO (
             mkdir "%%G-%%C" 2> nul
             move "%%H" "%%G-%%C"
         )
