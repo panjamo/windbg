@@ -1,9 +1,9 @@
 @echo off
 REM https://ss64.com/nt/syntax-args.html
 REM https://ss64.com/nt/for.html
-cd heaps
+pushd heaps
 setlocal EnableDelayedExpansion 
-REM convert hex to decimal
+convert hex to decimal
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     FOR /F "tokens=*" %%H IN ('hex2dec -nobanner 0x%%~nG') DO (
         echo rename %%~nG "%%H"
@@ -14,8 +14,15 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     Pushd "%%G"
     FOR %%H IN (*) DO (
-        mkdir "%%G-%%~zH"
-        move "%%H" "%%G-%%~zH"
+        REM FileSize
+        REM mkdir "%%G-%%~zH"
+        REM move "%%H" "%%G-%%~zH"
+
+        REM CHECKSUM
+        FOR /F "tokens=*" %%C IN ('tail -n +6 %%H ^| grep -o -P "^ {8}[0-9a-f]+" ^| cksum ^| awk "{ print $1 }"') DO (
+            mkdir "%%G-%%C" 2> nul
+            move "%%H" "%%G-%%C"
+        )
     )
     Popd
     rmdir "%%G"
