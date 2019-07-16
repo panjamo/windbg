@@ -3,6 +3,9 @@ SET PATH=c:\Program Files (x86)\Windows Kits\10\Debuggers\x64;%PATH%
 rmdir /s /q heaps
 mkdir heaps
 
+set MYTIME=%time::=_%
+move heaps.7z "heaps_%MYTIME: =0%.7z"
+
 if not exist %1.AllHeaps.txt cdb.exe -z %1 -c "!heap -p -all;q" > %1.AllHeaps.txt
 if not exist %2.AllHeaps.txt cdb.exe -z %2 -c "!heap -p -all;q" > %2.AllHeaps.txt
 

@@ -12,7 +12,9 @@ IF EXIST "heaps.7z" (
     popd
     REM Do one thing
 ) ELSE (
+    pushd heaps
     7z a -mx=1 -r ../heaps *
+    popd
 )
 
 pushd heaps
