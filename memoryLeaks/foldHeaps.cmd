@@ -20,13 +20,18 @@ IF EXIST "heaps.7z" (
 pushd heaps
 setlocal EnableDelayedExpansion 
 convert hex to decimal
+
+echo.
+echo rename folders 
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     FOR /F "tokens=*" %%H IN ('hex2dec -nobanner 0x%%~nG') DO (
-        echo rename %%~nG "%%H"
+        echo | set /p="."
         rename %%~nG "%%H"
     )
 )
 
+echo.
+echo move files 
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     Pushd "%%G"
     FOR %%H IN (*) DO (
@@ -48,6 +53,8 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     rmdir "%%G"
 )
 
+echo.
+echo rename folders again
 SET WC=0
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     Pushd "%%G"
@@ -55,7 +62,7 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
         SET WC=%%H
     )
     Popd
-    echo rename "%%~nG" "%%~nG-!WC!"
+    echo | set /p="."
     rename "%%~nG" "%%~nG-!WC!"
 )
 exit /b
