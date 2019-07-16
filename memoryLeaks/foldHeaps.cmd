@@ -53,16 +53,33 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     rmdir "%%G"
 )
 
+
+SETLOCAL ENABLEEXTENSIONS 
+
 echo.
 echo rename folders again
 SET WC=0
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     Pushd "%%G"
     FOR /F "tokens=*" %%H IN ('ls ^| wc -l') DO (
-        SET WC=%%H
+        SET WC=00000000000000%%H
     )
-    Popd
-    echo | set /p="."
-    rename "%%~nG" "%%~nG-!WC!"
+
+    REM delete all files exept
+    if NOT [%1] == [-fast] (
+        FOR /F "tokens=*" %%H IN ('dir /b /A-D ^| tail -n +2') DO (
+            del %%H
+        )
+        FOR /F "tokens=*" %%H IN ('dir /b /A-D') DO (
+            move %%H "..\#!WC:~-6! - %%~nG" > nul
+            Popd
+            rmdir "%%G"
+        )
+    ) ELSE (
+        Popd    
+        echo | set /p="."
+        rename "%%~nG" "#!WC:~-5! - %%~nG"
+    )
+    
 )
 exit /b
