@@ -19,11 +19,11 @@ IF EXIST "heaps.7z" (
     pushd heaps
     7z x ../heaps.7z
     popd
-    REM Do one thing
 ) ELSE (
     pushd heaps
     7z a -mx=1 -r ../heaps *
     popd
+    git add heaps.7z
 )
 
 pushd heaps
@@ -80,15 +80,18 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
             del %%H
         )
         FOR /F "tokens=*" %%H IN ('dir /b /A-D') DO (
-            move %%H "..\#!WC:~-6! - %%~nG" > nul
+            move %%H "..\#!WC:~-6! - %%~nG.txt" > nul
             Popd
             rmdir "%%G"
         )
     ) ELSE (
+        ren * *.txt
         Popd    
         rename "%%~nG" "#!WC:~-5! - %%~nG"
     )
     echo | set /p="."    
 )
+git add *
+git commit -m "foldheaps %1"
 explorer .
 exit /b
