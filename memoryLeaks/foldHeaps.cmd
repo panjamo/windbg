@@ -1,8 +1,17 @@
 @echo off
 echo usage: foldHeaps [-fast]
-pause
+REM pause
 REM https://ss64.com/nt/syntax-args.html
 REM https://ss64.com/nt/for.html
+
+del split_?? 2> nul > nul
+
+IF EXIST "split_aa" (
+    echo The debuggers instances [CDB] are running, wait until they terminate.
+    echo Then start this script again.
+    pause
+    exit /b
+)
 
 IF EXIST "heaps.7z" (
     rmdir /s /q heaps
@@ -81,4 +90,5 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     )
     echo | set /p="."    
 )
+explorer .
 exit /b
