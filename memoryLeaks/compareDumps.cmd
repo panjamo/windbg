@@ -24,7 +24,7 @@ sort %2.AdressesWithDouble.txt | uniq --count | grep  "1 ." | sed "s/      1 //"
 
 echo count, total bytes, bytes, hex size (decimal size) >> %2.Summary.txt
 
-sort %2.AdressesWithDouble.txt | uniq --count | grep  "1 ." | sed "s/      1 //" | awk --non-decimal-data "/ / { print $6 \" \" (\"0x\"$6)+0   }" | sort | uniq --count | sort | awk "{ hexlen=\"0x\"$2 ; sum=sum+$1*$3 ;  printf \"%%10s%%15d%%10d%%10s (%%s)\n\", $1, sum, $1*$3, hexlen, $3 }" >> %2.Summary.txt
+sort %2.AdressesWithDouble.txt | uniq --count | grep  "1 ." | sed "s/      1 //" | awk --non-decimal-data "/ / { print $6 \" \" (\"0x\"$6)+0   }" | sort | uniq --count | sort -n -r | awk "{ hexlen=\"0x\"$2 ; sum=sum+$1*$3 ;  printf \"%%10s%%15d%%10d%%10s (%%s)\n\", $1, sum, $1*$3, hexlen, $3 }" >> %2.Summary.txt
 
 REM cat %1.Adresses.txt > %1.AdressesWithDouble.txt
 REM cat double.txt >> %1.AdressesWithDouble.txt
