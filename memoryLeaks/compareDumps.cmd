@@ -20,7 +20,7 @@ cat %2.Adresses.txt > %2.AdressesWithDouble.txt
 cat double.txt >> %2.AdressesWithDouble.txt
 sort %2.AdressesWithDouble.txt | uniq --count | grep  "1 ." | sed "s/      1 //" > %2.AdressesSortedDiff.txt
 
-powershell BusyFree.ps1 %1.AllHeaps.txt %2.AllHeaps.txt > %2.Summary.txt
+"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypas BusyFree.ps1 %1.AllHeaps.txt %2.AllHeaps.txt > %2.Summary.txt
 
 echo count, total bytes, bytes, hex size (decimal size) >> %2.Summary.txt
 
