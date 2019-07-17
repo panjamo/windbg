@@ -7,7 +7,9 @@ mkdir heaps  2> nul
 set MYTIME=%time::=_%
 move heaps.7z "heaps_%MYTIME: =0%.7z" 2> nul
 
+echo execute '!heap -p -all' on %1...
 if not exist %1.AllHeaps.txt cdb.exe -z %1 -c "!heap -p -all;q" > %1.AllHeaps.txt
+echo execute '!heap -p -all' on %2...
 if not exist %2.AllHeaps.txt cdb.exe -z %2 -c "!heap -p -all;q" > %2.AllHeaps.txt
 
 sed "s/\*.*/ /" %1.AllHeaps.txt | awk  "/(busy)/ { print \".logopen heaps/\" $6 \"/\" $1 \";!heap -p -a \" $1 \";? \" $6}" > %1.Adresses.txt
@@ -21,7 +23,7 @@ cat %2.Adresses.txt > %2.AdressesWithDouble.txt
 cat double.txt >> %2.AdressesWithDouble.txt
 sort %2.AdressesWithDouble.txt | uniq --count | grep  "1 ." | sed "s/      1 //" > %2.AdressesSortedDiff.txt
 
-"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypas BusyFree.ps1 %1.AllHeaps.txt %2.AllHeaps.txt > %2.Summary.txt
+"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "$env:PATH+=';' + $pwd ; BusyFree.ps1 .\%1.AllHeaps.txt .\%2.AllHeaps.txt" > %2.Summary.txt
 
 echo count, total bytes, bytes, hex size (decimal size) >> %2.Summary.txt
 
@@ -54,7 +56,7 @@ echo wait until CDB's are ready (check if split_aa file can be deleted)
 :still_more_files
     echo | set /p="."    
     ping -n 10 127.0.0.1 >nul
-    rm split_aa 2> 0
+    rm split_aa 2> nul
     REM echo ERRORLEVEL = %ERRORLEVEL% 
     if [%ERRORLEVEL%] == [1] (
         goto :still_more_files
