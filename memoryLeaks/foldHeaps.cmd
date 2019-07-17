@@ -19,8 +19,8 @@ IF EXIST "heaps.7z" (
 
 pushd heaps
 setlocal EnableDelayedExpansion 
-convert hex to decimal
 
+REM convert hex to decimal
 echo.
 echo rename folders 
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
@@ -77,9 +77,8 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
         )
     ) ELSE (
         Popd    
-        echo | set /p="."
         rename "%%~nG" "#!WC:~-5! - %%~nG"
     )
-    
+    echo | set /p="."    
 )
 exit /b
