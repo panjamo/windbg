@@ -24,6 +24,7 @@ IF EXIST "heaps.7z" (
     7z a -mx=1 -r ../heaps *
     popd
     git add heaps.7z
+    git commit -m "foldheaps %1 (packed raw data added)"
 )
 
 pushd heaps
@@ -92,6 +93,6 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     echo | set /p="."    
 )
 git add *
-git commit -m "foldheaps %1"
+git commit -m "foldheaps %1 (results added)"
 explorer .
 exit /b
