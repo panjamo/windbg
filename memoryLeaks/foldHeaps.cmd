@@ -92,7 +92,7 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     )
     echo | set /p="."    
 )
-git add *
+git add -A .
 git commit -m "foldheaps %1 (results added)"
 explorer .
 exit /b
