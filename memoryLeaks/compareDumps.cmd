@@ -1,9 +1,36 @@
 @ECHO OFF
-ECHO usage: compareDumps ^<first dump^> ^<second dump^> [-fast]
+ECHO usage: compareDumps [-killcdbs] [-fast] [-clear] ^<first dump^> ^<second dump^>
+ECHO.
+
+SET CLEAR=false
+SET FAST=
+:nextArgument
+  if [%1] == [-fast] (
+      set FAST=-fast
+  ) ELSE if [%1] == [-clear] (
+      SET CLEAR=true
+  ) ELSE if [%1] == [-killcdbs] (
+    pskill -nobanner cdb
+    ping -n 2 127.0.0.1 > nul
+  ) ELSE (
+      goto leaveArgumentLoop
+  )
+  shift
+goto nextArgument
+:leaveArgumentLoop 
+
+
 IF [%2] == [] (
     pause 
     exit /b
-) 
+)
+
+IF [%CLEAR%] == [true] (
+    ECHO deleting %1.AllHeaps.txt, %2.AllHeaps.txt ...
+    del %1.AllHeaps.txt 2> nul
+    del %2.AllHeaps.txt 2> nul
+)
+
 SET PATH=C:\Program Files\Git\usr\bin;%PATH%
 SET PATH=c:\Program Files (x86)\Windows Kits\10\Debuggers\x64;%PATH%
 if not exist .git git init 
@@ -56,6 +83,7 @@ del *WithDouble.txt
 del *AdressesSortedDiff.txt
 del *Adresses.txt
 
+del split_* 2> nul
 wc -l cdbInput.txt  | awk "{ lines=int($1/4) + 1 ; print lines }" | xargs -I$ split -l "$" cdbInput.txt split_
 
 for %%x in (split*) do echo .logclose >> "%%x"
@@ -68,11 +96,16 @@ for %%x in (split*) do (
 )
 for %%x in (split*) do start /min /low cdb.exe -z %2 -c "$<%%x"
 
+
+FOR /F "tokens=*" %%G IN ('cat cdbInput.txt ^| wc -l ') DO SET STACKS=%%G
 del cdbInput.txt
 
-echo wait until CDB's are ready (check if split_aa file can be deleted)
+echo wait until CDB's are ready (%STACKS% expected) (check if split_aa file can be deleted)
 :still_more_files
-    echo | set /p="."    
+    FOR /F "tokens=*" %%G IN ('find heaps -type f ^| wc -l') DO (
+        SET ALREADYDONE=%%G
+    )
+    echo %ALREADYDONE% of %STACKS%
     ping -n 10 127.0.0.1 >nul
     rm split_aa 2> nul
     REM echo ERRORLEVEL = %ERRORLEVEL% 
@@ -82,4 +115,4 @@ echo wait until CDB's are ready (check if split_aa file can be deleted)
 
 REM start foldheaps 
 ping -n 5 127.0.0.1 >nul
-foldheaps.cmd %3
+foldheaps.cmd %FAST%
