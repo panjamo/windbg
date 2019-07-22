@@ -36,14 +36,14 @@ echo rename folders
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
     FOR /F "tokens=*" %%H IN ('hex2dec -nobanner 0x%%~nG') DO (
         echo | set /p="."
-        rename %%~nG "%%H"
+        rename "%%~nG" "%%H"
     )
 )
 
 echo.
 echo move files 
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
-    Pushd "%%G"
+    pushd "%%G"
     FOR %%H IN (*) DO (
         REM FileSize
         if [%1] == [-fast] (
@@ -59,7 +59,7 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
             )
         )
     )
-    Popd
+    popd
     rmdir "%%G"
 )
 
@@ -70,7 +70,7 @@ echo.
 echo rename folders again
 SET WC=0
 FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
-    Pushd "%%G"
+    pushd "%%G"
     FOR /F "tokens=*" %%H IN ('ls ^| wc -l') DO (
         SET WC=00000000000000%%H
     )
@@ -82,17 +82,20 @@ FOR /F "tokens=*" %%G IN ('dir /b /s /AD') DO (
         )
         FOR /F "tokens=*" %%H IN ('dir /b /A-D') DO (
             move %%H "..\#!WC:~-6! - %%~nG.txt" > nul
-            Popd
+            popd
             rmdir "%%G"
         )
     ) ELSE (
         ren * *.txt
-        Popd    
+        popd    
         rename "%%~nG" "#!WC:~-5! - %%~nG"
     )
     echo | set /p="."    
 )
+endlocal
+endlocal
+REM explorer .
+popd
 git add -A .
 git commit -m "foldheaps %1 (results added)"
-explorer .
-exit /b
+

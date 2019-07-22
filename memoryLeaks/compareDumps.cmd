@@ -113,6 +113,24 @@ echo wait until CDB's are ready (%STACKS% expected) (check if split_aa file can 
         goto :still_more_files
     )
 
+    rm split_ab 2> nul
+    REM echo ERRORLEVEL = %ERRORLEVEL% 
+    if [%ERRORLEVEL%] == [1] (
+        goto :still_more_files
+    )
+
+    rm split_ac 2> nul
+    REM echo ERRORLEVEL = %ERRORLEVEL% 
+    if [%ERRORLEVEL%] == [1] (
+        goto :still_more_files
+    )
+
+    rm split_ad 2> nul
+    REM echo ERRORLEVEL = %ERRORLEVEL% 
+    if [%ERRORLEVEL%] == [1] (
+        goto :still_more_files
+    )
+
 REM start foldheaps 
 ping -n 5 127.0.0.1 >nul
 foldheaps.cmd %FAST%
